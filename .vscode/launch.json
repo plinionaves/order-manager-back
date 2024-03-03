@@ -1,0 +1,73 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    // Default launch configuration for VSCode Jest extension
+    {
+      "name": "Run project",
+      "type": "node",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start:debug", "--", "--inspect-brk"],
+      "autoAttachChildProcesses": true,
+      "restart": true,
+      "stopOnEntry": false,
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**/*.js"
+      ],
+      "sourceMaps": true,
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "Debug unit tests",
+      "type": "node",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "-r",
+        "tsconfig-paths/register",
+        "-r",
+        "ts-node/register",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand"
+      ],
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**/*.js"
+      ]
+    },
+    {
+      "name": "Debug e2e tests",
+      "type": "node",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "-r",
+        "tsconfig-paths/register",
+        "-r",
+        "ts-node/register",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "./test/e2e/jest-e2e.json",
+        "--runInBand"
+      ],
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**/*.js"
+      ]
+    }
+  ]
+}
