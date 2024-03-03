@@ -18,7 +18,7 @@ The project has a lot of things that can be improved, here is a list of some of 
 
 ## Setup
 
-- [ ] Setup husky and lintstaged to:
-  - [ ] Run lint on staged files
-  - [ ] Run tests on staged files
-  - [ ] Run commitlint in the commit message
+- [x] Setup husky and lintstaged to:
+  - [x] Run lint on staged files
+  - [x] Run tests on staged files
+  - [x] Run commitlint in the commit message
