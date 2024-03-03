@@ -1,30 +1,22 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Order Manager Back
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This repository is a mini project to allocate Sales Orders against Purchase Orders.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+The system will allocate the Sales Orders based on the FIFO (First In First Out) rule considering the receiving date of the Purchase Orders.
 
-## Description
+## Architecture
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The project was built based on [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) of Uncle Bob.
+
+The project is divided into 4 layers:
+
+- **[Domain](src/domain)**: This layer is responsible for the business rules and the entities of the system. It is the most important and inner layer of the system, because it is where the enterprise business rules are implemented.
+
+- **[Application](src/application)**: This layer is responsible for the application business rules and the use cases of the system. It is the layer that orchestrates the flow of the system.
+
+- **[Infrastructure](src/infra)**: This layer is responsible for the external tools and frameworks that the system uses. It is the layer that communicates with the external world. So here we have the real implementation of the repositories, the database, the external services, etc.
+
+- **[Nest/Main/Interface](src/nest)**: This layer is responsible for the communication between the system and the external world. It is the layer that receives the requests and sends the responses. It is the layer that communicates with the external world. Here we have [NestJS](https://github.com/nestjs/nest) and the REST API for example.
 
 ## Installation
 
@@ -33,6 +25,10 @@ $ npm install
 ```
 
 ## Running the app
+
+First of all, rename the `.env.example` file to `.env` and fill the environment variables.
+
+Then, you can run the app using the following command:
 
 ```bash
 # development
@@ -58,16 +54,44 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## Debug
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+You can use the `Run and Debug` feature of Visual Studio Code to debug the application.
 
-## Stay in touch
+![alt text](docs/img/debugger.png)
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+It's useful if you want to add some breakpoints and see the values of the variables and the flow of the application.
 
-## License
+## Testing/visualizing the allocation
 
-Nest is [MIT licensed](LICENSE).
+After running the application, open your browser and go to the following URL: [http://localhost:3000/api](http://localhost:3000/api)
+
+You will see the Swagger UI with the endpoints of the application.
+
+![alt text](docs/img/swagger.png)
+
+If you initially execute `GET /allocations`, you'll receive a empty list of allocations.
+
+You'll need to execute the `POST /allocations` endpoint to create the allocations.
+
+After that, you can execute the `GET /allocations` endpoint to see the allocations.
+
+Main files to look at:
+
+- [src/application/usecases/allocate-orders.ts](src/application/usecases/allocate-orders.ts#L125): This is the usecase that fetches the sales and purchase orders and allocates them.
+- [src/infra/in-memory](src/infra/in-memory): This is the in-memory implementation of the repositories. It's useful for testing and development and contains the initial sales and purchase orders.
+- [src/nest/allocation.controller.ts](src/nest/allocation.controller.ts): This is the controller that handles the requests and responses of the application.
+- [test/unit/application/usecases/allocate-orders.spec.ts](test/unit/application/usecases/allocate-orders.spec.ts): This is the test file for the usecase that fetches the sales and purchase orders and allocates them.
+
+## Potential improvements
+
+Refer to the [improvements.md](docs/improvements.md) file for a list of potential improvements.
+
+## Author
+
+Developed by Plinio Naves
+
+- Email: [pliniopjn@gmail.com](mailto:pliniopjn@gmail.com)
+- Linkedin: [linkedin.com/in/plinionaves](https://www.linkedin.com/in/plinionaves)
+- Twitter: [@plinionaves](https://twitter.com/plinionaves)
+- Github: [github.com/plinionaves](https://github.com/plinionaves)
